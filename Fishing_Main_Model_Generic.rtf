@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww25100\viewh14080\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Name: TF_Main_generic\
+\
+Coordinates: Rs, Cj, Ca, P\
+\
+Parameters:E_rdel,T,T0,k,E_K,E_m,E_i,E_u,del,K,H_c,q,sig_c,sig_p,phi,H_p,z,f_Ca,f_P\
+\
+r_del=exp((E_rdel*(T-T0))/(k*T*T0))\
+r_K=exp((E_K*(T-T0))/(k*T*T0))
+\fs14 \cb2 \expnd0\expndtw0\kerning0
+\
+
+\fs24 \cb1 \kerning1\expnd0\expndtw0 r_m=exp((E_m*(T-T0))/(k*T*T0))\
+r_i=exp((E_i*(T-T0))/(k*T*T0))\
+r_u=exp((E_u*(T-T0))/(k*T*T0))\
+\
+G=del*r_del*(K*r_K-Rs)\
+\
+M_c=0.1*0.0001.^-0.25\
+\
+w_Cj=M_c*r_i*Rs/(H_c+Rs)\
+w_Ca=q*M_c*r_i*Rs/(H_c+Rs)\
+\
+M_p=0.1*0.01.^-0.25\
+T_p=0.01*0.01.^-0.25\
+T_c=0.01*0.0001.^-0.25\
+\
+Nu_Cj=sig_c*w_Cj-T_c*r_m\
+Nu_Ca=sig_c*w_Ca-T_c*r_m\
+Nu_P=(sig_p*M_p*((phi*Cj+(1-phi)*Ca)/(H_p+phi*Cj+(1-phi)*Ca)))-T_p*r_m\
+\
+u_j=0.0015*0.0001.^-0.25\
+u_a=0.0015*0.0001.^-0.25\
+u_P=0.0015*0.01.^-0.25\
+\
+u_Cj=u_j*r_u+((M_p*r_i*phi*P)/(H_p+phi*Cj+(1-phi)*Ca))\
+u_Ca=u_a*r_u+((M_p*r_i*(1-phi)*P)/(H_p+phi*Cj+(1-phi)*Ca))\
+\
+if(Nu_Ca>0), Nu_p_Ca=Nu_Ca; else ;Nu_p_Ca=0; end\
+if(Nu_Cj>0), Nu_p_Cj=Nu_Cj; else ;Nu_p_Cj=0; end\
+\
+mat_rate=(Nu_p_Cj-u_Cj)/(1-z^(1-(u_Cj/Nu_p_Cj)))\
+\
+Rs\'92=G-w_Cj*Cj-w_Ca*Ca\
+Cj\'92=Nu_p_Ca*Ca-mat_rate*Cj+Nu_Cj*Cj-u_Cj*Cj\
+Ca\'92=mat_rate*Cj+(Nu_Ca-Nu_p_Ca)*Ca-u_Ca*Ca-f_Ca*Ca\
+P\'92=(Nu_P-u_P*r_u)*P-f_P*P\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+User functions:\
+\
+fishmortality_p fp\
+res=((sig_p*(0.1*0.01.^-0.25)*(exp(E_i*(T-T0)/(k*T*T0)))*((phi*Cj+(1-phi)*Ca)/(H_p+phi*Cj+(1-phi)*Ca)))-(0.01*0.01.^-0.25)*(exp(E_m*(T-T0)/(k*T*T0))))-(0.0015*0.01.^-0.25)*exp(E_u*(T-T0)/(k*T*T0))\
+\
+fishmortality_a fa\
+res=(((sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca))))/(1-z^(1-(((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))/(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))))))*Cj-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*(1-phi)*P)/(H_p+phi*Cj+(1-phi)*Ca)))\
+\
+matrate mr\
+res=(sig_c*(q*(0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Ca+(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Cj-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))*Cj\
+\
+reproduction_ja gj\
+res=(((sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca))))/(1-z^(1-(((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))/(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))))))*Cj-(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Cj+((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))*Cj\
+\
+Netbioprod pj\
+res=(0.0015*0.01.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))*P+f_P*P\
+\
+mortj mj\
+res=(sig_c*(q*(0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Ca-(((sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca))))/(1-z^(1-(((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))/(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))))))*Cj+(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Cj\
+\
+mortp mp\
+res=((sig_p*(0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*((phi*Cj+(1-phi)*Ca)/(H_p+phi*Cj+(1-phi)*Ca)))-(0.01*0.01.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*P-f_P*P\
+\
+netbioprodj nj\
+res=((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))*Cj-(sig_c*(q*(0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Ca+(((sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca))))/(1-z^(1-(((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))/(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))))))*Cj\
+\
+netbioprod na \
+res=(((sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca))))/(1-z^(1-(((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*phi*P)/(H_p+phi*Cj+(1-phi)*Ca)))/(sig_c*((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))))))*Cj-(sig_c*(q*(0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))-(0.01*0.0001.^-0.25)*(exp((E_m*(T-T0))/(k*T*T0))))*Ca-((0.0015*0.0001.^-0.25)*(exp((E_u*(T-T0))/(k*T*T0)))+(((0.1*0.01.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*(1-phi)*P)/(H_p+phi*Cj+(1-phi)*Ca)))*Ca+f_Ca*Ca\
+\
+Resource production rp\
+res=((0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))*Cj+(q*(0.1*0.0001.^-0.25)*(exp((E_i*(T-T0))/(k*T*T0)))*Rs/(H_c+Rs))*Ca\
+\
+\
+\
+\
+}
